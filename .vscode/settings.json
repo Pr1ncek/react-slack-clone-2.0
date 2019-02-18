@@ -1,9 +1,9 @@
-// {
-//   "bracketPairColorizer.consecutivePairColors": [
-//     "()",
-//     "[]",
-//     "{}",
-//     ["Red", "Blue", "purple"],
-//     "Black"
-//   ]
-// }
+{
+  "bracketPairColorizer.consecutivePairColors": [
+    "()",
+    "[]",
+    "{}",
+    ["Red", "Blue", "purple"],
+    "Black"
+  ]
+}
