@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
 import firebase from '../../firebase';
 import { Link } from 'react-router-dom';
+import md5 from 'md5';
 
-import {
-  Grid,
-  Form,
-  Segment,
-  Button,
-  Icon,
-  Message,
-  Header
-} from 'semantic-ui-react';
+import { Grid, Form, Segment, Button, Icon, Message, Header } from 'semantic-ui-react';
 
 class Register extends Component {
   state = {
@@ -19,31 +12,29 @@ class Register extends Component {
     password: '',
     passwordConfirmation: '',
     errors: [],
-    loading: false
+    loading: false,
+    usersRef: firebase.database().ref('users')
   };
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleSubmit = event => {
+  handleSubmit = async event => {
     if (this.isFormValid()) {
-      this.setState({ errors: [], loading: true });
       event.preventDefault();
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(createdUser => {
-          console.log(createdUser);
-          this.setState({ loading: false });
-        })
-        .catch(err => {
-          console.error(err);
-          this.setState({
-            errors: this.state.errors.concat(err),
-            loading: false
-          });
+      try {
+        this.setState({ errors: [], loading: true });
+        const newUser = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.state.email, this.state.password);
+        await newUser.user.updateProfile({
+          displayName: this.state.username,
+          photoURL: `http://gravatar.com/avatar/${md5(newUser.user.email)}?d=identicon`
         });
+        await this.saveUserToDatabase(newUser);
+      } catch (error) {
+        console.error(error);
+        this.setState({ errors: this.state.errors.concat(error) });
+      } finally {
+        this.setState({ loading: false });
+      }
     }
   };
 
@@ -57,8 +48,7 @@ class Register extends Component {
     } else if (!this.isPasswordValid(this.state)) {
       this.setState({
         errors: errors.concat({
-          message:
-            'Password is invalid! Must be atleast six characters and Match'
+          message: 'Password is invalid! Must be atleast six characters and Match'
         })
       });
       return false;
@@ -67,12 +57,7 @@ class Register extends Component {
   };
 
   isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
-    return (
-      !username.length ||
-      !email.length ||
-      !password.length ||
-      !passwordConfirmation.length
-    );
+    return !username.length || !email.length || !password.length || !passwordConfirmation.length;
   };
 
   isPasswordValid = ({ password, passwordConfirmation }) => {
@@ -84,25 +69,28 @@ class Register extends Component {
     return true;
   };
 
+  saveUserToDatabase = newUser => {
+    return this.state.usersRef.child(newUser.user.uid).set({
+      name: newUser.user.displayName,
+      avatar: newUser.user.photoURL
+    });
+  };
+
+  // functions below are used within render()
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   displayErrors = errors => {
     return errors.map((error, i) => <p key={i}>{error.message}</p>);
   };
 
   markInputsWithError = (inputName, errors) => {
-    return errors.some(error => error.message.toLowerCase().includes(inputName))
-      ? 'error'
-      : '';
+    return errors.some(error => error.message.toLowerCase().includes(inputName)) ? 'error' : '';
   };
 
   render() {
-    const {
-      username,
-      email,
-      password,
-      passwordConfirmation,
-      errors,
-      loading
-    } = this.state;
+    const { username, email, password, passwordConfirmation, errors, loading } = this.state;
     return (
       <Grid textAlign="center" verticalAlign="middle" style={styles}>
         <Grid.Column style={{ maxWidth: 450 }}>
@@ -157,13 +145,7 @@ class Register extends Component {
                 onChange={this.handleChange}
                 className={this.markInputsWithError('password', errors)}
               />
-              <Button
-                color="blue"
-                fluid
-                size="large"
-                disabled={loading}
-                loading={loading}
-              >
+              <Button color="blue" fluid size="large" disabled={loading} loading={loading}>
                 Register
               </Button>
             </Segment>
@@ -175,7 +157,7 @@ class Register extends Component {
             </Message>
           )}
           <Message>
-            Already a user? <Link to="/login">Login</Link>
+            Already a user? <Link to="/login"> Login</Link>
           </Message>
         </Grid.Column>
       </Grid>
