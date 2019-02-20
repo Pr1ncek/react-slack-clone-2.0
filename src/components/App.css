@@ -2,3 +2,19 @@ html,
 body {
   box-sizing: border-box;
 }
+
+/* Messages.js */
+.messages {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+/* MessageForm.js */
+.message__form {
+  position: fixed !important;
+  bottom: 1em;
+  left: 0;
+  margin-left: 320px !important;
+  right: 1em;
+  z-index: 200;
+}
