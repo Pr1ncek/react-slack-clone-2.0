@@ -5,7 +5,10 @@ body {
 
 /* Messages.js */
 .messages {
-  height: 400px;
+  height: 500px;
+  width: 100% !important;
+  padding-left: 15px;
+  padding-top: 5px;
   overflow-y: scroll;
 }
 
@@ -17,4 +20,20 @@ body {
   margin-left: 320px !important;
   right: 1em;
   z-index: 200;
+}
+
+/* Message.js */
+.message__self {
+  border-left: 3px solid crimson;
+  padding-left: 10px;
+}
+
+.message__image {
+  padding: 1em;
+}
+
+/* Semantic UI CSS override */
+
+.ui.comments {
+  max-width: 100% !important;
 }

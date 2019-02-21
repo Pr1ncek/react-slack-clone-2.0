@@ -9,7 +9,7 @@ var config = {
   authDomain: 'react-slack-clone-d4dc2.firebaseapp.com',
   databaseURL: 'https://react-slack-clone-d4dc2.firebaseio.com',
   projectId: 'react-slack-clone-d4dc2',
-  storageBucket: 'react-slack-clone-d4dc2.appspot.com/',
+  storageBucket: 'react-slack-clone-d4dc2.appspot.com',
   messagingSenderId: '819795682127'
 };
 firebase.initializeApp(config);
