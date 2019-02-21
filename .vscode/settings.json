@@ -1,11 +1,9 @@
 {
-  "editor.minimap.maxColumn": 120
-} // {
-//   "bracketPairColorizer.consecutivePairColors": [
-//     "()",
-//     "[]",
-//     "{}",
-//     ["Red", "Blue", "green"],
-//     "Black"
-//   ]
-// }
+  "bracketPairColorizer.consecutivePairColors": [
+    "()",
+    "[]",
+    "{}",
+    ["Red", "Blue", "green"],
+    "Black"
+  ]
+}

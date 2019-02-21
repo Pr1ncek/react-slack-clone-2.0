@@ -11,7 +11,7 @@ import './App.css';
 
 function App({ currentUser, currentChannel }) {
   return (
-    <Grid columns="equal" style={styles}>
+    <Grid columns="equal">
       <ColorPanel />
       <SidePanel currentUser={currentUser} key={currentUser && currentUser.uid} />
       <Grid.Column style={{ marginLeft: 320 }}>
@@ -27,12 +27,6 @@ function App({ currentUser, currentChannel }) {
     </Grid>
   );
 }
-
-const styles = {
-  backgroundColor: '#eee',
-  height: '100vh',
-  padding: '1rem'
-};
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,

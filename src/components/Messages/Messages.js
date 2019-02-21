@@ -10,9 +10,11 @@ class Messages extends Component {
   state = {
     messagesRef: firebase.database().ref('messages'),
     messages: [],
+    filteredMessages: [], // used for searching messages
     messagesLoading: true,
     currentChannel: this.props.currentChannel,
-    currentUser: this.props.currentUser
+    currentUser: this.props.currentUser,
+    numberOfUniqueUsers: 0
   };
 
   componentDidMount() {
@@ -32,7 +34,17 @@ class Messages extends Component {
         messages: loadedMessages,
         messagesLoading: false
       });
+      this.countUsersOnCurrentChannel(loadedMessages);
     });
+  };
+  countUsersOnCurrentChannel = messages => {
+    const uniqueUsers = messages.reduce((acc, message) => {
+      if (!acc.includes(message.sender.name)) {
+        acc.push(message.sender.name);
+      }
+      return acc;
+    }, []);
+    this.setState({ numberOfUniqueUsers: uniqueUsers.length });
   };
 
   displayMessages = messages => {
@@ -44,13 +56,35 @@ class Messages extends Component {
     );
   };
 
+  displayChannelName = channel => (channel ? `#${channel.name}` : '');
+
+  setFilteredMessages = filteredMessages => this.setState({ filteredMessages });
+  clearFilteredMessages = () => this.setState({ filteredMessages: [] });
+
   render() {
-    const { messagesRef, messages, currentChannel, currentUser } = this.state;
+    const {
+      messagesRef,
+      messages,
+      filteredMessages,
+      currentChannel,
+      currentUser,
+      numberOfUniqueUsers
+    } = this.state;
     return (
       <React.Fragment>
-        <MessageHeader />
-        <Segment>
-          <Comment.Group className="messages">{this.displayMessages(messages)}</Comment.Group>
+        {/* <MessageHeader
+          channelName={this.displayChannelName(currentChannel)}
+          numberOfUniqueUsers={numberOfUniqueUsers}
+          messages={messages}
+          setFilteredMessages={this.setFilteredMessages}
+          clearFilteredMessages={this.clearFilteredMessages}
+        /> */}
+        <Segment style={{ marginTop: '14px' }}>
+          <Comment.Group className="messages">
+            {filteredMessages.length > 0
+              ? this.displayMessages(filteredMessages)
+              : this.displayMessages(messages)}
+          </Comment.Group>
         </Segment>
         <MessageForm
           messagesRef={messagesRef}

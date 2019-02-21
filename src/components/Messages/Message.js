@@ -22,7 +22,11 @@ const Message = ({ message, currentUser }) => {
         <Comment.Author as="a">{message.sender.name}</Comment.Author>
         <Comment.Metadata>{timeFromNow(message.timestamp)}</Comment.Metadata>
         {isImage(message) ? (
-          <Image src={message.image} className="message__image" style={{ paddingTop: '5px' }} />
+          <Image
+            src={message.image}
+            className="message__image"
+            style={{ marginTop: '5px', width: '75%' }}
+          />
         ) : (
           <Comment.Text style={{ paddingTop: '5px', fontSize: '1.15rem' }}>
             {message.content}

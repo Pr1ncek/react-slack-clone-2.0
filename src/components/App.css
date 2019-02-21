@@ -1,11 +1,17 @@
 html,
 body {
   box-sizing: border-box;
+  height: 100vh;
+  padding: 0.5em;
+  padding-bottom: 0;
+  padding-top: 0;
+  margin: 0;
+  background-color: #eeeeee;
 }
 
 /* Messages.js */
 .messages {
-  height: 500px;
+  height: 76vh;
   width: 100% !important;
   padding-left: 15px;
   padding-top: 5px;
@@ -17,7 +23,7 @@ body {
   position: fixed !important;
   bottom: 1em;
   left: 0;
-  margin-left: 320px !important;
+  margin-left: 332px !important;
   right: 1em;
   z-index: 200;
 }

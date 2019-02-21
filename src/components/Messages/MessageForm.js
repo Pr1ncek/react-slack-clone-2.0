@@ -26,7 +26,7 @@ class MessageForm extends React.Component {
     const { messagesRef } = this.props;
     const { message, currentChannel } = this.state;
     try {
-      if (message) {
+      if (message && message.trim().length > 0) {
         this.setState({ sending: true });
         await messagesRef
           .child(currentChannel.id)
@@ -94,17 +94,16 @@ class MessageForm extends React.Component {
       <Segment className="message__form" style={{ padding: '20px' }}>
         <Input
           fluid
-          size="huge"
           name="message"
           style={{ marginBottom: '0.7em' }}
           label={<Button icon="smile outline" />}
-          placeholder="Write your message..."
+          placeholder="Write Your Message"
           value={message}
           onChange={this.handleChange}
         />
         <Button.Group icon widths="2">
           <Button
-            style={{ padding: '15px' }}
+            style={{ padding: '10px' }}
             color="blue"
             content="Send Message"
             labelPosition="left"
