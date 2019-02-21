@@ -9,6 +9,11 @@ body {
   background-color: #eeeeee;
 }
 
+/* SidePanel.js */
+.menu {
+  padding-bottom: 3em;
+}
+
 /* Messages.js */
 .messages {
   height: 76vh;

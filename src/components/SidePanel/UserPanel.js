@@ -37,12 +37,12 @@ class UserPanel extends Component {
         <Grid.Column>
           <Grid.Row style={{ padding: '1.2em', margin: 0 }}>
             {/* App Header */}
-            <Header inverted as="h2" floated="left">
+            <Header inverted as="h2" floated="left" style={{ paddingBottom: '20px' }}>
               <Icon name="code" />
               <Header.Content>Messenger</Header.Content>
             </Header>
             {/* User Dropdown */}
-            <Header as="h4" inverted style={{ padding: '.25em' }}>
+            <Header as="h4" inverted style={{ paddingBottom: '20px' }}>
               <Dropdown
                 trigger={
                   <span>
