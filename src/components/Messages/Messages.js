@@ -9,10 +9,12 @@ import Message from './Message';
 class Messages extends Component {
   state = {
     messagesRef: firebase.database().ref('messages'),
+    privateMessagesRef: firebase.database().ref('privateMessages'),
     messages: [],
     filteredMessages: [], // used for searching messages
     messagesLoading: true,
     currentChannel: this.props.currentChannel,
+    isPrivateChannel: this.props.isPrivate,
     currentUser: this.props.currentUser,
     numberOfUniqueUsers: 0
   };
@@ -56,7 +58,9 @@ class Messages extends Component {
     );
   };
 
-  displayChannelName = channel => (channel ? `#${channel.name}` : '');
+  displayChannelName = channel => {
+    return channel ? `${this.state.isPrivateChannel ? '@' : '#'}${channel.name}` : '';
+  };
 
   setFilteredMessages = filteredMessages => this.setState({ filteredMessages });
   clearFilteredMessages = () => this.setState({ filteredMessages: [] });
@@ -68,17 +72,19 @@ class Messages extends Component {
       filteredMessages,
       currentChannel,
       currentUser,
-      numberOfUniqueUsers
+      numberOfUniqueUsers,
+      isPrivateChannel
     } = this.state;
     return (
       <React.Fragment>
-        {/* <MessageHeader
+        <MessageHeader
           channelName={this.displayChannelName(currentChannel)}
           numberOfUniqueUsers={numberOfUniqueUsers}
           messages={messages}
           setFilteredMessages={this.setFilteredMessages}
           clearFilteredMessages={this.clearFilteredMessages}
-        /> */}
+          isPrivateChannel={isPrivateChannel}
+        />
         <Segment style={{ marginTop: '14px' }}>
           <Comment.Group className="messages">
             {filteredMessages.length > 0
@@ -90,6 +96,7 @@ class Messages extends Component {
           messagesRef={messagesRef}
           currentChannel={currentChannel}
           currentUser={currentUser}
+          isPrivateChannel={isPrivateChannel}
         />
       </React.Fragment>
     );

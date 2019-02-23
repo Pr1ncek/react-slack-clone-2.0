@@ -61,7 +61,7 @@ class MessageForm extends React.Component {
   uploadImageFile = async (imageFile, metadata) => {
     const { messagesRef } = this.props;
     const pathToUpload = this.state.currentChannel.id;
-    const filePath = `chat/public/${uuidv4()}.jpg`;
+    const filePath = `${this.createPath()}${uuidv4()}.jpg`;
     try {
       await this.setState({
         uploadingImage: true,
@@ -74,6 +74,9 @@ class MessageForm extends React.Component {
     } catch (error) {
       console.error(error, error.message);
     }
+  };
+  createPath = () => {
+    this.props.isPrivateChannel ? `chat/private-${this.state.currentChannel.id}` : 'chat/public';
   };
   sendImageMessage = async (imageFileUrl, messagesRef, pathToUpload) => {
     try {

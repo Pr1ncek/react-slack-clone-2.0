@@ -32,14 +32,14 @@ class MessagesHeader extends Component {
   };
 
   render() {
-    const { channelName, numberOfUniqueUsers = 0 } = this.props;
+    const { channelName, numberOfUniqueUsers = 0, isPrivateChannel } = this.props;
     const { searchTerm, searching } = this.state;
     return (
       <Segment clearing>
         {/* Channel Title */}
         <Header floated="left" fluid="true" as="h2" style={{ marginBottom: 0 }}>
           <span>
-            {channelName} <Icon name="heart outline" color="red" />
+            {channelName} {!isPrivateChannel && <Icon name="heart outline" color="red" />}
           </span>
           <Header.Subheader>
             {numberOfUniqueUsers === 1

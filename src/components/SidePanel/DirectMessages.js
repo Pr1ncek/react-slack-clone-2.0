@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import firebase from '../../firebase';
+
 import { Menu, Icon } from 'semantic-ui-react';
+
+import { setCurrentChannel, setPrivateChannel } from '../../actions/actions';
 
 class DirectMessages extends Component {
   state = {
@@ -50,7 +54,6 @@ class DirectMessages extends Component {
       }
     });
   };
-
   addStatusToUser = (userId, connected = true) => {
     const updatedUsers = this.state.users.reduce((acc, user) => {
       if (user.uid === userId) {
@@ -59,6 +62,20 @@ class DirectMessages extends Component {
       return acc.concat(user);
     }, []);
     this.setState({ users: updatedUsers });
+  };
+
+  changeChannel = user => {
+    const channelId = this.createChannelId(user.uid);
+    const channel = {
+      id: channelId,
+      name: user.name
+    };
+    this.props.setCurrentChannel(channel);
+    this.props.setPrivateChannel(true);
+  };
+  createChannelId = userId => {
+    const currentUserId = this.state.currentUser.uid;
+    return userId < currentUserId ? `${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
   };
 
   render() {
@@ -73,7 +90,11 @@ class DirectMessages extends Component {
         </Menu.Item>
         {users.length > 0 &&
           users.map(user => (
-            <Menu.Item key={user.uid} style={{ opacity: 0.7, fontStyle: 'italic' }}>
+            <Menu.Item
+              key={user.uid}
+              style={{ opacity: 0.7, fontStyle: 'italic' }}
+              onClick={() => this.changeChannel(user)}
+            >
               <Icon name="circle" color={user.status === 'online' ? 'green' : 'red'} />@ {user.name}
             </Menu.Item>
           ))}
@@ -82,4 +103,7 @@ class DirectMessages extends Component {
   }
 }
 
-export default DirectMessages;
+export default connect(
+  null,
+  { setCurrentChannel, setPrivateChannel }
+)(DirectMessages);
