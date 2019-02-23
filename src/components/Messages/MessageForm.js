@@ -23,7 +23,7 @@ class MessageForm extends React.Component {
   handleChange = event => this.setState({ [event.target.name]: event.target.value });
 
   sendMessage = async () => {
-    const { messagesRef } = this.props;
+    const messagesRef = this.props.getMessagesRef();
     const { message, currentChannel } = this.state;
     try {
       if (message && message.trim().length > 0) {
@@ -59,7 +59,7 @@ class MessageForm extends React.Component {
   };
 
   uploadImageFile = async (imageFile, metadata) => {
-    const { messagesRef } = this.props;
+    const messagesRef = this.props.getMessagesRef();
     const pathToUpload = this.state.currentChannel.id;
     const filePath = `${this.createPath()}${uuidv4()}.jpg`;
     try {

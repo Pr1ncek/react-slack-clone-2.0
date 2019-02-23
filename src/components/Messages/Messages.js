@@ -30,7 +30,8 @@ class Messages extends Component {
   };
   addMessagesListener = channelId => {
     let loadedMessages = [];
-    this.state.messagesRef.child(channelId).on('child_added', snap => {
+    const ref = this.getMessagesRef();
+    ref.child(channelId).on('child_added', snap => {
       loadedMessages.push(snap.val());
       this.setState({
         messages: loadedMessages,
@@ -38,6 +39,10 @@ class Messages extends Component {
       });
       this.countUsersOnCurrentChannel(loadedMessages);
     });
+  };
+  getMessagesRef = () => {
+    const { isPrivateChannel, messagesRef, privateMessagesRef } = this.state;
+    return isPrivateChannel ? privateMessagesRef : messagesRef;
   };
   countUsersOnCurrentChannel = messages => {
     const uniqueUsers = messages.reduce((acc, message) => {
@@ -97,6 +102,7 @@ class Messages extends Component {
           currentChannel={currentChannel}
           currentUser={currentUser}
           isPrivateChannel={isPrivateChannel}
+          getMessagesRef={this.getMessagesRef}
         />
       </React.Fragment>
     );

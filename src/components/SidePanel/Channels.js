@@ -7,11 +7,14 @@ import { setCurrentChannel } from '../../actions/actions';
 class Channels extends Component {
   state = {
     activeChannelId: '',
+    activeChannel: null,
     user: this.props.currentUser,
     channels: [],
     channelName: '',
     channelDescription: '',
     channelsRef: firebase.database().ref('channels'),
+    messagesRef: firebase.database().ref('messages'),
+    notifications: [],
     modal: false,
     firstLoad: true // first time the application loads
   };
@@ -24,6 +27,7 @@ class Channels extends Component {
     this.state.channelsRef.on('child_added', snap => {
       loadedChannels.push(snap.val());
       this.setState({ channels: loadedChannels }, this.setFirstChannel);
+      this.addNotificationsListener(snap.key);
     });
   };
   setFirstChannel = () => {
@@ -31,12 +35,42 @@ class Channels extends Component {
     if (firstLoad && channels.length > 0) {
       const firstChannel = channels[0];
       this.props.setCurrentChannel(firstChannel);
-      this.setActiveChannelId(firstChannel.id);
+      this.setActiveChannel(firstChannel);
     }
     this.setState({ firstLoad: false });
   };
-  setActiveChannelId = channelId => {
-    this.setState({ activeChannelId: channelId });
+  setActiveChannel = channel => {
+    this.setState({ activeChannelId: channel.id, activeChannel: channel });
+  };
+  addNotificationsListener = channelId => {
+    // prettier-ignore
+    this.state.messagesRef.child(channelId).on('value', snap => { 
+      
+        this.handleNotifications(channelId, this.state.activeChannelId, this.state.notifications, snap)
+      
+    });
+  };
+  handleNotifications = (channelId, activeChannelId, notifications, snap) => {
+    let index = notifications.findIndex(notification => notification.id === channelId);
+    if (index !== -1) {
+      const channel = notifications[index];
+      if (channelId !== activeChannelId) {
+        const numberOfNewMessages = snap.numChildren() - channel.totalNumOfMessages;
+        if (numberOfNewMessages > 0) {
+          channel.newMessagesCount = numberOfNewMessages;
+        }
+        console.log(numberOfNewMessages, snap.numChildren());
+      }
+      channel.lastKnownTotal = snap.numChildren();
+    } else {
+      notifications.push({
+        id: channelId,
+        totalNumOfMessages: snap.numChildren(),
+        lastKnownTotal: snap.numChildren(),
+        newMessagesCount: 0
+      });
+    }
+    this.setState({ notifications });
   };
 
   componentWillUnmount() {
@@ -93,7 +127,7 @@ class Channels extends Component {
       </Menu.Item>
     ));
   changeChannel = channel => {
-    this.setActiveChannelId(channel.id);
+    this.setActiveChannel(channel);
     this.props.setCurrentChannel(channel);
   };
 
