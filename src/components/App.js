@@ -23,7 +23,12 @@ function App({ currentUser, currentChannel, isPrivate }) {
         />
       </Grid.Column>
       <Grid.Column width={4}>
-        <MetaPanel />
+        <MetaPanel
+          currentUser={currentUser}
+          currentChannel={currentChannel}
+          isPrivate={isPrivate}
+          key={currentChannel && currentChannel.id}
+        />
       </Grid.Column>
     </Grid>
   );

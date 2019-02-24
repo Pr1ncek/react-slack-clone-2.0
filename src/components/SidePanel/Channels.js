@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import { Menu, Icon, Modal, Form, Input, ModalActions, Button } from 'semantic-ui-react';
+import { Menu, Icon, Modal, Form, Input, ModalActions, Button, Label } from 'semantic-ui-react';
 import { setCurrentChannel } from '../../actions/actions';
 
 class Channels extends Component {
@@ -44,10 +44,9 @@ class Channels extends Component {
   };
   addNotificationsListener = channelId => {
     // prettier-ignore
-    this.state.messagesRef.child(channelId).on('value', snap => { 
-      
+    this.state.messagesRef.child(channelId).on('value', snap => {  
+      if(this.state.activeChannel)
         this.handleNotifications(channelId, this.state.activeChannelId, this.state.notifications, snap)
-      
     });
   };
   handleNotifications = (channelId, activeChannelId, notifications, snap) => {
@@ -59,7 +58,6 @@ class Channels extends Component {
         if (numberOfNewMessages > 0) {
           channel.newMessagesCount = numberOfNewMessages;
         }
-        console.log(numberOfNewMessages, snap.numChildren());
       }
       channel.lastKnownTotal = snap.numChildren();
     } else {
@@ -123,12 +121,36 @@ class Channels extends Component {
         onClick={() => this.changeChannel(channel)}
         active={channel.id === this.state.activeChannelId}
       >
+        {this.getNotificationsCount(channel) && (
+          <Label color="red">{this.getNotificationsCount(channel)}</Label>
+        )}
         # {channel.name}
       </Menu.Item>
     ));
   changeChannel = channel => {
+    this.clearNotifications();
     this.setActiveChannel(channel);
     this.props.setCurrentChannel(channel);
+  };
+  clearNotifications = () => {
+    let index = this.state.notifications.findIndex(
+      notification => notification.id === this.state.activeChannelId
+    );
+    if (index !== -1) {
+      let updatedNotifications = [...this.state.notifications];
+      updatedNotifications[index].totalNumOfMessages = this.state.notifications[index].lastKnownTotal;
+      updatedNotifications[index].newMessagesCount = 0;
+      this.setState({ notifications: updatedNotifications });
+    }
+  };
+  getNotificationsCount = channel => {
+    let count = 0;
+    this.state.notifications.forEach(notification => {
+      if (notification.id === channel.id) {
+        count = notification.newMessagesCount;
+      }
+    });
+    if (count > 0) return count;
   };
 
   render() {

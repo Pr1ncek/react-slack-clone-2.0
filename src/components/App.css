@@ -16,7 +16,8 @@ body {
 
 /* Messages.js */
 .messages {
-  height: 76vh;
+  margin-top: 0 !important;
+  height: 66vh;
   width: 100% !important;
   padding-left: 15px;
   padding-top: 5px;

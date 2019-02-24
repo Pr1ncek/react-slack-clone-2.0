@@ -32,19 +32,31 @@ class MessagesHeader extends Component {
   };
 
   render() {
-    const { channelName, numberOfUniqueUsers = 0, isPrivateChannel } = this.props;
+    const {
+      channelName,
+      numberOfUniqueUsers = 0,
+      isPrivateChannel,
+      setFavoriteChannel,
+      isFavoriteChannel
+    } = this.props;
     const { searchTerm, searching } = this.state;
     return (
       <Segment clearing>
         {/* Channel Title */}
         <Header floated="left" fluid="true" as="h2" style={{ marginBottom: 0 }}>
           <span>
-            {channelName} {!isPrivateChannel && <Icon name="heart outline" color="red" />}
+            {channelName}{' '}
+            {!isPrivateChannel && (
+              <Icon
+                link
+                name={isFavoriteChannel ? 'heart' : 'heart outline'}
+                color="red"
+                onClick={setFavoriteChannel}
+              />
+            )}
           </span>
           <Header.Subheader>
-            {numberOfUniqueUsers === 1
-              ? `${numberOfUniqueUsers} user`
-              : `${numberOfUniqueUsers} users`}
+            {numberOfUniqueUsers === 1 ? `${numberOfUniqueUsers} user` : `${numberOfUniqueUsers} users`}
           </Header.Subheader>
         </Header>
 
