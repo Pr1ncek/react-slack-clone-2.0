@@ -94,7 +94,7 @@ class MessageForm extends React.Component {
   render() {
     const { message, sending, modal, uploadingImage } = this.state;
     return (
-      <Segment className="message__form" style={{ padding: '20px' }}>
+      <Segment className="message__form" style={{ padding: '20px', width: '75%' }}>
         <Input
           fluid
           name="message"

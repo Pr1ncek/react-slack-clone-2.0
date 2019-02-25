@@ -7,16 +7,16 @@ import Favorites from './Favorites';
 
 class SidePanel extends Component {
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, primaryColor } = this.props;
     return (
       <Menu
         size="large"
         vertical
         fixed="left"
         inverted
-        style={{ backgroundColor: '#4c3c4c', fontSize: '1.2rem' }}
+        style={{ backgroundColor: primaryColor, fontSize: '1.2rem' }}
       >
-        <UserPanel currentUser={currentUser} />
+        <UserPanel currentUser={currentUser} primaryColor={primaryColor} />
         <Favorites currentUser={currentUser} />
         <Channels currentUser={currentUser} />
         <DirectMessages currentUser={currentUser} />

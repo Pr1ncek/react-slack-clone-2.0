@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import firebase from '../../firebase';
 import { Segment, Comment } from 'semantic-ui-react';
 
 import MessageHeader from './MessagesHeader';
 import MessageForm from './MessageForm';
 import Message from './Message';
+
+import { setUserPostsCount } from '../../actions/actions';
 
 class Messages extends Component {
   state = {
@@ -41,6 +44,7 @@ class Messages extends Component {
         messagesLoading: false
       });
       this.countUsersOnCurrentChannel(loadedMessages);
+      this.determineTopPostersOnChannel(loadedMessages);
     });
   };
   getMessagesRef = () => {
@@ -67,6 +71,20 @@ class Messages extends Component {
           this.setState({ isFavoriteChannel: favoritedChannelIds.includes(channelId) });
         }
       });
+  };
+  determineTopPostersOnChannel = messages => {
+    let userPostsCount = messages.reduce((acc, message) => {
+      if (message.sender.name in acc) {
+        acc[message.sender.name].messageCount += 1;
+      } else {
+        acc[message.sender.name] = {
+          avatar: message.sender.avatar,
+          messageCount: 1
+        };
+      }
+      return acc;
+    }, {});
+    this.props.setUserPostsCount(userPostsCount);
   };
 
   displayMessages = messages => {
@@ -136,23 +154,28 @@ class Messages extends Component {
           setFavoriteChannel={this.setFavoriteChannel}
           isFavoriteChannel={isFavoriteChannel}
         />
-        <Segment style={{ marginTop: '14px' }}>
+        <Segment>
           <Comment.Group className="messages">
             {filteredMessages.length > 0
               ? this.displayMessages(filteredMessages)
               : this.displayMessages(messages)}
           </Comment.Group>
         </Segment>
-        <MessageForm
-          messagesRef={messagesRef}
-          currentChannel={currentChannel}
-          currentUser={currentUser}
-          isPrivateChannel={isPrivateChannel}
-          getMessagesRef={this.getMessagesRef}
-        />
+        <Segment>
+          <MessageForm
+            messagesRef={messagesRef}
+            currentChannel={currentChannel}
+            currentUser={currentUser}
+            isPrivateChannel={isPrivateChannel}
+            getMessagesRef={this.getMessagesRef}
+          />
+        </Segment>
       </React.Fragment>
     );
   }
 }
 
-export default Messages;
+export default connect(
+  null,
+  { setUserPostsCount }
+)(Messages);

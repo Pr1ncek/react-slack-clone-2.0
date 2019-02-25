@@ -41,7 +41,7 @@ class MessagesHeader extends Component {
     } = this.props;
     const { searchTerm, searching } = this.state;
     return (
-      <Segment clearing>
+      <Segment clearing style={{ marginTop: '-10px' }}>
         {/* Channel Title */}
         <Header floated="left" fluid="true" as="h2" style={{ marginBottom: 0 }}>
           <span>
@@ -56,7 +56,9 @@ class MessagesHeader extends Component {
             )}
           </span>
           <Header.Subheader>
-            {numberOfUniqueUsers === 1 ? `${numberOfUniqueUsers} user` : `${numberOfUniqueUsers} users`}
+            {numberOfUniqueUsers === 1
+              ? `${numberOfUniqueUsers} user`
+              : `${numberOfUniqueUsers} users`}
           </Header.Subheader>
         </Header>
 

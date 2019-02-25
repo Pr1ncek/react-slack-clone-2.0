@@ -34,3 +34,23 @@ export const setPrivateChannel = isPrivate => {
     }
   };
 };
+
+export const setUserPostsCount = userPostsCount => {
+  return {
+    type: actionTypes.SET_USER_POSTS_COUNT,
+    payload: {
+      userPostsCount
+    }
+  };
+};
+
+// COLOR ACTIONS
+export const setApplicationColors = (primaryColor, secondaryColor) => {
+  return {
+    type: actionTypes.SET_APPLICATION_COLORS,
+    payload: {
+      primaryColor,
+      secondaryColor
+    }
+  };
+};
