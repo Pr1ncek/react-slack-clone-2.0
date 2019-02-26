@@ -14,7 +14,7 @@ class SidePanel extends Component {
         vertical
         fixed="left"
         inverted
-        style={{ backgroundColor: primaryColor, fontSize: '1.2rem' }}
+        style={{ backgroundColor: primaryColor, fontSize: '1.25rem' }}
       >
         <UserPanel currentUser={currentUser} primaryColor={primaryColor} />
         <Favorites currentUser={currentUser} />
